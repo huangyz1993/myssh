@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="struts2" extends="struts-default">
+		<action name="login" class="loginAction">
+			<result name="success" type="redirect">index.jsp</result>
+			<result name="input">login1.jsp</result>
+			<result name="error">login1.jsp</result>
+			<!-- 展示用户信息页面 -->
+			<result name="show">show.jsp</result>
+		</action>
+		<action name="wuzhi" class="wuzhi">
+			<result name="success">index.jsp</result>
+		</action>
+	</package>
+</struts>

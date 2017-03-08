@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="struts2" extends="struts-default">
+		<action name="login" class="loginAction">
+			<result name="success" type="redirect">index.jsp</result>
+			<result name="input">login1.jsp</result>
+			<result name="error">login1.jsp</result>
+			<!-- 展示用户信息页面 -->
+			<result name="show">show.jsp</result>
+		</action>
+		<action name="wuzhi" class="wuzhi">
+			<result name="success">index.jsp</result>
+			<result name="showWuzhi">showWuzhi.jsp</result>
+			<result name="showArticle">article.jsp</result>
+			<result name="userArticle">userArticle.jsp</result>
+			<result name="showTrend">showTrend.jsp</result>
+			<result name="showLove">showLove.jsp</result>
+		</action>
+		<action name="trend" class="trend">
+			<result name="showTrend">showTrend.jsp</result>
+			<result name="timeTrend">timeTrend.jsp</result>
+			<result name="showKeyword">showKeyword.jsp</result>
+			<result name="showTimeKeyTrend">showTimeKeyTrend.jsp</result>
+		</action>
+	</package>
+</struts>
