@@ -11,6 +11,7 @@
 </head>
 <body style="height: 100%; margin: 0">
 	<div id="container" style="height: 560px;"></div>
+	<div>备案号：浙ICP备17008428号<div>
 	<script type="text/javascript">
 		var dom = document.getElementById("container");
 		var myChart = echarts.init(dom);
