@@ -12,7 +12,8 @@
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://127.0.0.1:3306/wuzhi?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="url"
+			value="jdbc:mysql://127.0.0.1:3306/wuzhi?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="123456" />
 	</bean>
@@ -33,12 +34,10 @@
 		<!-- 如果使用配置文件 -->
 		<!-- <property name="mappingLocations"> <list> <value>classpath:com/jialin/entity/User.hbm.xml</value> 
 			</list> </property> -->
-		<property name="annotatedClasses">
-			<list>
-				<value>com.wuzhi.entity.User</value>
-				<value>com.wuzhi.entity.Article</value>
-			</list>
-		</property>
+		<!-- <property name="annotatedClasses"> <list> <value>com.wuzhi.entity.User</value> 
+			<value>com.wuzhi.entity.Article</value> <value>com.wuzhi.entity.Articles</value> 
+			</list> </property> -->
+		<property name="packagesToScan" value="com.wuzhi.entity" />
 
 	</bean>
 
@@ -55,7 +54,7 @@
 			<tx:method name="insert*" propagation="REQUIRED" />
 			<tx:method name="delete*" propagation="REQUIRED" />
 			<tx:method name="get*" propagation="REQUIRED" />
-			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
 			<!-- <tx:method name="*" propagation="REQUIRED" /> -->
 			<!--hibernate4必须配置为开启事务 否则 getCurrentSession()获取不到 -->
 			<tx:method name="*" propagation="REQUIRED" read-only="true" />
@@ -70,8 +69,12 @@
 	</aop:config>
 	<context:annotation-config />
 
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
 
-	<!-- 需要扫描注入的包-->
+	</bean>
+
+	<!-- 需要扫描注入的包 -->
 	<context:component-scan base-package="com.wuzhi" />
 
 </beans>

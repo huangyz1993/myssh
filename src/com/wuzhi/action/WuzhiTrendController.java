@@ -1,6 +1,11 @@
 package com.wuzhi.action;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.util.DateUtil;
-import com.wuzhi.entity.Article;
 import com.wuzhi.entity.Articles;
 import com.wuzhi.service.ArticleService;
 import com.wuzhi.service.WuzhiArticleService;
@@ -35,6 +39,22 @@ public class WuzhiTrendController {
 	@Autowired
 	private ArticleService articlesService;
 
+	public String array[];
+
+	public Integer arrayMon[];
+
+	public Integer arrayTue[];
+
+	public Integer arrayWed[];
+
+	public Integer arrayThu[];
+
+	public Integer arrayFri[];
+
+	public Integer arraySat[];
+
+	public Integer arraySun[];
+
 	public List<Articles> articles = new ArrayList<Articles>();
 
 	/**
@@ -43,7 +63,8 @@ public class WuzhiTrendController {
 	 * @return
 	 */
 	public String showTrend() {
-		List<Articles> allArticles = articlesService.getArticles();
+		// List<Articles> allArticles = articlesService.getArticles();
+		List<Articles> allArticles = wuzhiArticleService.getArticles();
 		String str = "";
 		for (Articles item : allArticles) {
 			str += item.getArticle();
@@ -94,7 +115,8 @@ public class WuzhiTrendController {
 	 * @return
 	 */
 	public String showTimeTrend() {
-		articles = articlesService.getArticles();
+		// articles = articlesService.getArticles();
+		articles = wuzhiArticleService.getArticles();
 		timeNumber = new Integer[24];
 		for (int i = 0; i < 24; i++) {
 			timeNumber[i] = 0;
@@ -126,6 +148,125 @@ public class WuzhiTrendController {
 		return "showTimeKeyTrend";
 	}
 
+	@SuppressWarnings("deprecation")
+	public String showWeak() throws ParseException {
+		Calendar calendar = Calendar.getInstance();
+		// 或者用 Date 来初始化 Calendar 对象
+		calendar.setTime(new Date());
+		SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		int weak = calendar.get(Calendar.DAY_OF_WEEK);
+		String time = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time1 = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time2 = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time3 = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time4 = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time5 = dft.format(calendar.getTime());
+		calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+		String time6 = dft.format(calendar.getTime());
+		Map weakMap = wuzhiArticleService.getOneWeakNum(time, time1, time2, time3, time4, time5, time6);
+		array = new String[7];
+		calendar.setTime(new Date(time.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "1", time);
+
+		calendar.setTime(new Date(time1.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "2", time1);
+
+		calendar.setTime(new Date(time2.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "3", time2);
+
+		calendar.setTime(new Date(time3.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "4", time3);
+
+		calendar.setTime(new Date(time4.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "5", time4);
+
+		calendar.setTime(new Date(time5.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "6", time5);
+
+		calendar.setTime(new Date(time6.replace("-", "/")));
+		weak = calendar.get(Calendar.DAY_OF_WEEK);
+		returnWeak(weak, array, weakMap, "7", time6);
+		// switch (weak) {
+		// case 1:
+		// for (int i = 6; i >= 0; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((7 - i) + "")).toString();
+		// }
+		// ;
+		// break;
+		// case 2:
+		// for (int i = 6; i >= 1; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((8 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// case 3:
+		// for (int i = 6; i >= 2; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((9 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("2")).toString();
+		// array[1] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// case 4:
+		// for (int i = 6; i >= 3; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((10 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("3")).toString();
+		// array[1] = ((BigDecimal) weakMap.get("2")).toString();
+		// array[2] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// case 5:
+		// for (int i = 6; i >= 4; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((11 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("4")).toString();
+		// array[1] = ((BigDecimal) weakMap.get("3")).toString();
+		// array[2] = ((BigDecimal) weakMap.get("2")).toString();
+		// array[3] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// case 6:
+		// for (int i = 6; i >= 5; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((12 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("5")).toString();
+		// array[1] = ((BigDecimal) weakMap.get("4")).toString();
+		// array[2] = ((BigDecimal) weakMap.get("3")).toString();
+		// array[3] = ((BigDecimal) weakMap.get("2")).toString();
+		// array[4] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// case 7:
+		// for (int i = 6; i >= 6; i--) {
+		// array[i] = ((BigDecimal) weakMap.get((13 - i) + "")).toString();
+		// }
+		// array[0] = ((BigDecimal) weakMap.get("6")).toString();
+		// array[1] = ((BigDecimal) weakMap.get("5")).toString();
+		// array[2] = ((BigDecimal) weakMap.get("4")).toString();
+		// array[3] = ((BigDecimal) weakMap.get("3")).toString();
+		// array[4] = ((BigDecimal) weakMap.get("2")).toString();
+		// array[5] = ((BigDecimal) weakMap.get("1")).toString();
+		// ;
+		// break;
+		// }
+
+		return "showWeak";
+	}
+
 	/**
 	 * 输入关键字查询
 	 * 
@@ -135,6 +276,89 @@ public class WuzhiTrendController {
 		if (!keyword.equals(""))
 			keywordNum = wuzhiArticleService.getByKeyword(keyword, time);
 		return "showKeyword";
+	}
+
+	public void returnWeak(int weak, String arr[], Map weakMap, String i, String time) {
+		List<Articles> articles = wuzhiArticleService.getArticlesByTime(time);
+		switch (weak) {
+		case 1:
+			array[6] = ((BigDecimal) weakMap.get(i)).toString();
+			arraySun = new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arraySun[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arraySun[Integer.parseInt(times)]++;
+			}
+			break;
+		case 2:
+			array[0] = ((BigDecimal) weakMap.get(i)).toString();
+			arrayMon = new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arrayMon[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arrayMon[Integer.parseInt(times)]++;
+			}
+			break;
+		case 3:
+			array[1] = ((BigDecimal) weakMap.get(i)).toString();
+			arrayTue = new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arrayTue[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arrayTue[Integer.parseInt(times)]++;
+			}
+			break;
+		case 4:
+			array[2] = ((BigDecimal) weakMap.get(i)).toString();
+			arrayWed= new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arrayWed[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arrayWed[Integer.parseInt(times)]++;
+			}
+			break;
+		case 5:
+			array[3] = ((BigDecimal) weakMap.get(i)).toString();
+			arrayThu= new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arrayThu[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arrayThu[Integer.parseInt(times)]++;
+			}
+			break;
+		case 6:
+			array[4] = ((BigDecimal) weakMap.get(i)).toString();
+			arrayFri= new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arrayFri[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arrayFri[Integer.parseInt(times)]++;
+			}
+			break;
+		case 7:
+			array[5] = ((BigDecimal) weakMap.get(i)).toString();
+			arraySat= new Integer[24];
+			for (int x = 0; x < 24; x++) {
+				arraySat[x] = 0;
+			}
+			for (Articles item : articles) {
+				String times = DateUtil.format(item.getTime(), "HH");
+				arraySat[Integer.parseInt(times)]++;
+			}
+			break;
+		}
 	}
 
 	public String[][] getNumber() {
@@ -191,6 +415,70 @@ public class WuzhiTrendController {
 
 	public void setArticles(List<Articles> articles) {
 		this.articles = articles;
+	}
+
+	public String[] getArray() {
+		return array;
+	}
+
+	public void setArray(String[] array) {
+		this.array = array;
+	}
+
+	public Integer[] getArrayMon() {
+		return arrayMon;
+	}
+
+	public void setArrayMon(Integer[] arrayMon) {
+		this.arrayMon = arrayMon;
+	}
+
+	public Integer[] getArrayTue() {
+		return arrayTue;
+	}
+
+	public void setArrayTue(Integer[] arrayTue) {
+		this.arrayTue = arrayTue;
+	}
+
+	public Integer[] getArrayWed() {
+		return arrayWed;
+	}
+
+	public void setArrayWed(Integer[] arrayWed) {
+		this.arrayWed = arrayWed;
+	}
+
+	public Integer[] getArrayThu() {
+		return arrayThu;
+	}
+
+	public void setArrayThu(Integer[] arrayThu) {
+		this.arrayThu = arrayThu;
+	}
+
+	public Integer[] getArrayFri() {
+		return arrayFri;
+	}
+
+	public void setArrayFri(Integer[] arrayFri) {
+		this.arrayFri = arrayFri;
+	}
+
+	public Integer[] getArraySat() {
+		return arraySat;
+	}
+
+	public void setArraySat(Integer[] arraySat) {
+		this.arraySat = arraySat;
+	}
+
+	public Integer[] getArraySun() {
+		return arraySun;
+	}
+
+	public void setArraySun(Integer[] arraySun) {
+		this.arraySun = arraySun;
 	}
 
 }

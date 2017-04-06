@@ -1,5 +1,6 @@
 package com.wuzhi.action;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,11 +14,14 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.util.DateUtil;
+import com.util.ResultUtils;
 import com.util.Url;
 import com.util.Wuzhi;
 import com.wuzhi.entity.Article;
@@ -56,6 +60,8 @@ public class WuzhiController {
 	public String numberCopy[][];
 
 	public String writeDays;
+	
+	public Integer pageNum;
 
 	@Autowired
 	private WuzhiService wuzhiService;
@@ -69,8 +75,11 @@ public class WuzhiController {
 	@Autowired
 	private ThreadWuzhi threadWuzhi;
 
+	private final static Logger wuzhiLogger = LogManager.getLogger("WuzhiController");
+
 	public String uploadUser() throws ParseException, MalformedURLException, InterruptedException {
 		// for (int xx = 0; xx < 10000; xx++) {
+		Integer number = 0;
 		Date beginDate = new Date();
 		User user = new User();
 		List<String> wuzhi = new Wuzhi().getUserInfo();
@@ -129,6 +138,7 @@ public class WuzhiController {
 				user.setRelPic(relPic);
 				user.setRelBigPic(relBigPic);
 				wuzhiService.InsertUSer(user);
+				number++;
 			} else {
 				String oldName = "";
 				String oldPic = "";
@@ -165,12 +175,14 @@ public class WuzhiController {
 						wuzhiService.updateUser(oldUser);
 				}
 			}
-			String url = "https://wuzhi.me" + userArray[0];
-			addArticle(new Url().getContent(url), userId);
+			// String url = "https://wuzhi.me" + userArray[0];
+			// addArticle(new Url().getContent(url), userId);
 			oldUserIndex++;
 		}
 		Date endDate = new Date();
 		System.out.println(endDate.getTime() - beginDate.getTime());
+		wuzhiLogger.info("此次花费时间" + (endDate.getTime() - beginDate.getTime()));
+		wuzhiLogger.info("增加人数" + number);
 		// Thread.sleep(60000);
 		// }
 		// userList = wuzhiService.getAllUser();
@@ -206,6 +218,52 @@ public class WuzhiController {
 		return "showWuzhi";
 
 	}
+	
+	
+	/**
+	 * 显示所有吾志用户，分页，最开始的先出现
+	 * @return
+	 * @throws IOException 
+	 */
+	public String showWuzhiByIndex(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String pageString = request.getParameter("page");
+		Integer page=1;
+		Integer count=wuzhiService.getUserCount();
+		pageNum=(int) Math.ceil(count/104);
+		if(pageString!=null){
+			page=Integer.parseInt(pageString);
+		}
+		userList = wuzhiService.getAllUser(page);
+		int length = userList.size();
+		for (int i = 0; i < length; i++) {
+			userList.get(i).setRelPic(userList.get(i).getRelPic().split(";;;xxx")[0]);
+		}
+		return "showWuzhiJson";
+	}
+	
+	/**
+	 * 显示所有吾志用户，分页，最开始的先出现 json格式
+	 * @return
+	 * @throws IOException 
+	 */
+	public String showWuzhiJson() throws IOException{
+		HttpServletRequest request = ServletActionContext.getRequest();
+		String pageString = request.getParameter("page");
+		Integer page=1;
+		Integer count=wuzhiService.getUserCount();
+		pageNum=(int) Math.ceil(count/104);
+		if(pageString!=null){
+			page=Integer.parseInt(pageString);
+		}
+		userList = wuzhiService.getAllUser(page);
+		int length = userList.size();
+		for (int i = 0; i < length; i++) {
+			userList.get(i).setRelPic(userList.get(i).getRelPic().split(";;;xxx")[0]);
+		}
+		ResultUtils.toJson(ServletActionContext.getResponse(), userList);
+		return null;
+	}
 
 	public String showLove() {
 		userList = wuzhiService.getAllUser();
@@ -225,7 +283,8 @@ public class WuzhiController {
 	 * @throws MalformedURLException
 	 */
 	public String showArticle() throws MalformedURLException {
-		articleWithNoUser = articlesService.getArticles();
+		// articleWithNoUser = articlesService.getArticles();
+		articleWithNoUser = wuzhiArticleService.getArticles();
 		return "showArticle";
 
 	}
@@ -249,7 +308,9 @@ public class WuzhiController {
 			dates = "0" + dates;
 		}
 		userArticles = wuzhiArticleService.getUserArticles(userId, years, months, dates);
-		List<Articles> userWriteList = articlesService.getUserArticles(userId, years, months);
+		// List<Articles> userWriteList =
+		// articlesService.getUserArticles(userId, years, months);
+		List<Articles> userWriteList = wuzhiArticleService.getUserArticles(userId, years, months);
 		int length = userWriteList.size();
 		for (int i = 0; i < length; i++) {
 			try {
@@ -269,6 +330,34 @@ public class WuzhiController {
 			}
 		}
 		return "userArticle";
+	}
+
+	/**
+	 * 下载所有已经在下载用户的吾志
+	 * 
+	 * @return
+	 * @throws ParseException
+	 */
+	public String addAllDownUser() throws ParseException {
+		Date beginTime = new Date();
+		List<User> userAll = wuzhiService.getUserAll();
+		String url = "https://wuzhi.me";
+		int userLength = userAll.size();
+		Integer addNum = 0;
+		for (int x = 0; x < userLength; x++) {
+			addNum += addArticle(new Url().getContent(url + "/u/" + userAll.get(x).getUserid()), userAll.get(x)
+					.getUserid());
+			System.out.println(x + " " + url + "/u/" + userAll.get(x).getUserid());
+		}
+		Date endTime = new Date();
+		System.out.println(endTime.getTime() - beginTime.getTime());
+		System.out.println("数量:" + addNum);
+
+		if (addNum > 0) {
+			wuzhiLogger.info("此次花费时间" + (endTime.getTime() - beginTime.getTime()));
+			wuzhiLogger.info("增加日志" + addNum);
+		}
+		return "success";
 	}
 
 	/**
@@ -449,7 +538,8 @@ public class WuzhiController {
 	}
 
 	// 增加日志
-	private void addArticle(String str, String userId) throws ParseException {
+	private Integer addArticle(String str, String userId) throws ParseException {
+		Integer addNum = 0;
 		Pattern pattern = Pattern.compile("(note_time\">).*?(</div>)$?");
 		Matcher matcher = pattern.matcher(str);
 		List<String> time = new ArrayList<String>();
@@ -494,9 +584,11 @@ public class WuzhiController {
 			article.setAddtime(DateUtil.parse(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
 			if (!wuzhiArticleService.isExist(userId, DateUtil.format(date2, "yyyy-MM-dd HH:mm:ss"), item)) {
 				wuzhiArticleService.add(article);
+				addNum++;
 			}
 			i++;
 		}
+		return addNum;
 	}
 
 	public Date decrease(Date trueDate) throws ParseException {

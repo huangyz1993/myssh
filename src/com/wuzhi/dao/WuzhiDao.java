@@ -10,5 +10,9 @@ public interface WuzhiDao {
 	public User findByUserId(String userId);
 	public List<User> findByUserIds(String userIds);
 	public List<User> getAllUser();
+	public List<User> getAllUser(Integer page);
+	public Integer getUserCount();
+
+	public List<User> getUserAll();
 
 }

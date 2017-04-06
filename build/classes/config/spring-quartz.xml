@@ -40,7 +40,7 @@
 	<bean id="cronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="job1" />
 		<!-- 每一分钟执行一次 -->
-		<property name="cronExpression" value="0 7,27,57 * * * ?" />
+		<property name="cronExpression" value="0 30 * * * ?" />
 
 	</bean>
 
@@ -50,7 +50,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="cronTrigger" />
-				<ref bean="cronTrigger1" />
+				<!-- <ref bean="cronTrigger1" /> -->
 			</list>
 		</property>
 	</bean>

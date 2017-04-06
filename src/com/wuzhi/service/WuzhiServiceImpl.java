@@ -45,4 +45,22 @@ public class WuzhiServiceImpl implements WuzhiService {
 		return wuzhiDao.getAllUser();
 	}
 
+	@Override
+	public List<User> getUserAll() {
+		// TODO Auto-generated method stub
+		return wuzhiDao.getUserAll();
+	}
+
+	@Override
+	public List<User> getAllUser(Integer page) {
+		// TODO Auto-generated method stub
+		return wuzhiDao.getAllUser(page);
+	}
+
+	@Override
+	public Integer getUserCount() {
+		// TODO Auto-generated method stub
+		return wuzhiDao.getUserCount();
+	}
+
 }

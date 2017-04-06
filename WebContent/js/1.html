@@ -1,0 +1,54 @@
+
+<script src="echarts.min.js">
+</script>
+<div id="container" style="height: 560px;"></div>
+	<div>备案号：浙ICP备17008428号<div>
+	<script type="text/javascript">
+		var dom = document.getElementById("container");
+		var myChart = echarts.init(dom);
+		var app = {};
+		option = null;
+		option = {
+			title : {
+				text : '折线图堆叠'
+			},
+			tooltip : {
+				trigger : 'axis'
+			},
+			legend : {
+				data : [ '时间' ]
+			},
+			grid : {
+				left : '3%',
+				right : '4%',
+				bottom : '3%',
+				containLabel : true
+			},
+			toolbox : {
+				feature : {
+					saveAsImage : {}
+				}
+			},
+			xAxis : {
+				type : 'category',
+				boundaryGap : false,
+				data : ['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+			},
+			yAxis : {
+				type : 'value'
+			},
+			series : [ {
+				name : '时间',
+				type : 'line',
+				stack : '总量',
+				data : [ 100,200,300,200,300,400,100  ]
+			} ]
+		};
+		;
+		if (option && typeof option === "object") {
+			myChart.setOption(option, true);
+		}
+	</script>
+
+		
+

@@ -11,8 +11,8 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-		classpath:config/applicationContext-*.xml,
-		classpath:config/spring-quartz.xml</param-value>
+		classpath:applicationContext-common.xml,
+		classpath:spring-quartz.xml</param-value>
 	</context-param>
 
 
@@ -26,10 +26,6 @@
 	<filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
-		<init-param>
-			<param-name>config</param-name>
-			<param-value>struts-default.xml,struts-plugin.xml,/config/struts.xml</param-value>
-		</init-param>
 	</filter>
 
 	<filter-mapping>

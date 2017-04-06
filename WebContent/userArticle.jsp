@@ -16,12 +16,17 @@
 	<div class="topHead">
 		<span class="floatLeft marginLeft20"><a
 			href="http://localhost:8080/mySSH/wuzhi!showWuzhi">首页</a></span> <span
-			class="floatRight marginRight22">hello nowayfly</span>
-			<input id="writeDays" type="hidden"  value="${writeDays}"/>
-			<input id="years" type="hidden"  value="${years}"/>
-			<input id="months" type="hidden"  value="${months}"/>
+			class="floatRight marginRight22 colorWhite">hello nowayfly</span> <input
+			id="writeDays" type="hidden" value="${writeDays}" /> <input
+			id="years" type="hidden" value="${years}" /> <input id="months"
+			type="hidden" value="${months}" />
 	</div>
 	<div class="marjorDiv ">
+		<div class="verticalBar">
+		    <div class="line"></div>
+		    <!-- <div class="lineTime " id="firstDay"><div class="lineOne"></div>1</div> -->
+		
+		</div>
 		<div class=" picCalendar">
 			<div class="floatLeft" id="headPic">
 				<img src="http://localhost:8090${relBigPic}" width="100%"
@@ -31,12 +36,12 @@
 			<div id="calendar" style="margin-left: 2%;">
 				<div class="floatLeft" style="margin-left: 1%;">
 					<span onclick="lastYear()" class="pointerStyle"><</span> <span
-						id="nowYear">2017</span> <span onclick="nextYear()"
+						id="nowYear"></span> <span onclick="nextYear()"
 						class="pointerStyle">></span>
 				</div>
 				<div class="floatRight">
 					<span onclick="lastMonth()" class="pointerStyle"><</span> <span
-						id="nowMonth">03</span>月 <span onclick="nextMonth()"
+						id="nowMonth"></span>月 <span onclick="nextMonth()"
 						class="pointerStyle">></span>
 				</div>
 				<br>
@@ -115,10 +120,16 @@
 			</s:iterator>
 			<span class="floatRight colorGray">--${name }</span>
 		</div>
+		<div id="circle">
+		   
+		</div>
 		<div class="floatClear"></div>
 	</div>
-	<div>备案号：浙ICP备17008428号<div>
-	<script src="js/jquery.js"></script>
-	<script src="js/calendar.js"></script>
+	<div class="marjorDiv"
+		style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+		备案号：浙ICP备17008428号
+		</div>
+			<script src="js/jquery.js"></script>
+			<script src="js/calendar.js"></script>
 </body>
 </html>

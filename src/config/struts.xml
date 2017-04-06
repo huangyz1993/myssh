@@ -18,12 +18,22 @@
 			<result name="userArticle">userArticle.jsp</result>
 			<result name="showTrend">showTrend.jsp</result>
 			<result name="showLove">showLove.jsp</result>
+			<result name="showWuzhiJson">showWuzhiJson.jsp</result>
 		</action>
 		<action name="trend" class="trend">
 			<result name="showTrend">showTrend.jsp</result>
 			<result name="timeTrend">timeTrend.jsp</result>
+			<result name="showWeak">showWeak.jsp</result>
 			<result name="showKeyword">showKeyword.jsp</result>
 			<result name="showTimeKeyTrend">showTimeKeyTrend.jsp</result>
 		</action>
+		<action name="wuzhiJson" class="wuzhi">
+		</action>
+		<action name="upload" class="upload">
+			<result name="success">upload.jsp</result>
+		</action>
+		<action name="csdn" class="csdn">
+		</action>
 	</package>
+	<constant name="struts.multipart.maxSize" value="100000000"/> 
 </struts>

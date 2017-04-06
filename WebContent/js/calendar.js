@@ -1,11 +1,17 @@
 year = new Date().getFullYear();
 month = new Date().getMonth() + 1;
-//if($("#years").val()!=null&&$("#years").val()!=""){
-//	year=$("#years").val();
-//	month =$("#months").val();
-//	$("#nowYear").text(year);
-//	$("#nowMonth").text(month);
-//}
+// if($("#years").val()!=null&&$("#years").val()!=""){
+// year=$("#years").val();
+// month =$("#months").val();
+// $("#nowYear").text(year);
+// $("#nowMonth").text(month);
+// }
+$("#nowYear").text(year);
+if(parseInt(month)<10){
+	$("#nowMonth").text("0"+month);
+}else{
+	$("#nowMonth").text(month);
+}
 date = new Date().getDate();
 day = new Array();
 isLeapYear = 0;// 是否闰年
@@ -17,6 +23,7 @@ for (i = 0; i < $("#weak tr td").length; i++) {
 	for (j = 0; j < writeDays.length; j++) {
 		if (parseInt(writeDays[j]) == parseInt($("#weak tr td:eq(" + i + ")").html())) {
 			$("#weak tr td:eq(" + i + ")").css("color", "blue");
+			$(".lineTime:eq(" + (i-2) + ")").css("color", "blue");
 			break;
 		}
 	}
@@ -74,7 +81,7 @@ function initTime() {
 		break;
 	}
 	initColor();
-	for (i = 1; i < day.length; i++) {
+	for (i = 1; i < day.length+1; i++) {
 		if (weakDay == 0) {
 			weakDay += 7;
 		}
@@ -87,6 +94,10 @@ function initTime() {
 	if (date == 1) {
 		$("#weak tr td:eq(" + (weakDay - 1) + ")").css("color", "red");
 	}
+	$(".lineTime").remove();
+	for(i = 1; i < day.length+1;i++){
+		$(".verticalBar").append(" <div class='lineTime'><div class='lineOne'></div>"+i+"</div>");
+	}
 }
 
 $("#weak tr td").click(function() {
@@ -94,12 +105,12 @@ $("#weak tr td").click(function() {
 		return;
 	}
 	initColor();
-//	console.log($(this).css("color")=="rgb(0, 0, 0)");
-//	console.log($(this).css("color"));
-//	console.log("rgb(0,0,0)");
+// console.log($(this).css("color")=="rgb(0, 0, 0)");
+// console.log($(this).css("color"));
+// console.log("rgb(0,0,0)");
 	$(this).css("color", "red");
 	date=$(this).text();
-	//alert($("#nowYear").text());
+	// alert($("#nowYear").text());
 	$.post("/mySSH/wuzhi!showUserArticle", {
 		years : $("#nowYear").text(),
 		months : $("#nowMonth").text(),
@@ -110,6 +121,8 @@ $("#weak tr td").click(function() {
 		str = str.replace("id=\"articleContent\">", "").replace("</div>", "");
 		// alert(str);
 		$("#articleContent").html(str);
+		nowHight=$("#articleContent").height();
+		$("#articleContent").css("height",0);
 		str = (result.match("type=\"hidden\"[\\s\\S]*?>")) + "";
 		// alert(str);
 		str = str.replace("type=\"hidden\"", "").replace("value=\"", "")
@@ -127,8 +140,14 @@ $("#weak tr td").click(function() {
 			}
 
 		}
+		$("#articleContent").animate({height:nowHight},1000,"swing",justtest);
+		//$("#articleContent").css("height",'auto');
 	});
 })
+function justtest(){
+	$("#articleContent").css("height",'');
+}
+
 function nextYear() {
 	chooseYear = parseInt($("#nowYear").text()) + 1;
 	$("#nowYear").text(chooseYear);
