@@ -24,10 +24,11 @@ import com.util.DateUtil;
 import com.util.ResultUtils;
 import com.util.Url;
 import com.util.Wuzhi;
+import com.wuzhi.entity.AddNum;
 import com.wuzhi.entity.Article;
 import com.wuzhi.entity.Articles;
 import com.wuzhi.entity.User;
-import com.wuzhi.service.ArticleService;
+import com.wuzhi.service.AddNumService;
 import com.wuzhi.service.WuzhiArticleService;
 import com.wuzhi.service.WuzhiService;
 import com.wuzhi.view.UserArticle;
@@ -60,7 +61,7 @@ public class WuzhiController {
 	public String numberCopy[][];
 
 	public String writeDays;
-	
+
 	public Integer pageNum;
 
 	@Autowired
@@ -70,10 +71,7 @@ public class WuzhiController {
 	private WuzhiArticleService wuzhiArticleService;
 
 	@Autowired
-	private ArticleService articlesService;
-
-	@Autowired
-	private ThreadWuzhi threadWuzhi;
+	private AddNumService addNumService;
 
 	private final static Logger wuzhiLogger = LogManager.getLogger("WuzhiController");
 
@@ -181,8 +179,15 @@ public class WuzhiController {
 		}
 		Date endDate = new Date();
 		System.out.println(endDate.getTime() - beginDate.getTime());
-		wuzhiLogger.info("此次花费时间" + (endDate.getTime() - beginDate.getTime()));
-		wuzhiLogger.info("增加人数" + number);
+		if (number > 0) {
+			wuzhiLogger.info("此次花费时间" + (endDate.getTime() - beginDate.getTime()));
+			wuzhiLogger.info("增加人数" + number);
+			AddNum addNum = new AddNum();
+			addNum.setAdd_num(number + "");
+			addNum.setType("用户");
+			addNum.setAddtime(DateUtil.parse(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
+			addNumService.insert(addNum);
+		}
 		// Thread.sleep(60000);
 		// }
 		// userList = wuzhiService.getAllUser();
@@ -218,21 +223,21 @@ public class WuzhiController {
 		return "showWuzhi";
 
 	}
-	
-	
+
 	/**
 	 * 显示所有吾志用户，分页，最开始的先出现
+	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public String showWuzhiByIndex(){
+	public String showWuzhiByIndex() {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String pageString = request.getParameter("page");
-		Integer page=1;
-		Integer count=wuzhiService.getUserCount();
-		pageNum=(int) Math.ceil(count/104);
-		if(pageString!=null){
-			page=Integer.parseInt(pageString);
+		Integer page = 1;
+		Integer count = wuzhiService.getUserCount();
+		pageNum = (int) Math.ceil(count / 104);
+		if (pageString != null) {
+			page = Integer.parseInt(pageString);
 		}
 		userList = wuzhiService.getAllUser(page);
 		int length = userList.size();
@@ -241,20 +246,21 @@ public class WuzhiController {
 		}
 		return "showWuzhiJson";
 	}
-	
+
 	/**
 	 * 显示所有吾志用户，分页，最开始的先出现 json格式
+	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public String showWuzhiJson() throws IOException{
+	public String showWuzhiJson() throws IOException {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String pageString = request.getParameter("page");
-		Integer page=1;
-		Integer count=wuzhiService.getUserCount();
-		pageNum=(int) Math.ceil(count/104);
-		if(pageString!=null){
-			page=Integer.parseInt(pageString);
+		Integer page = 1;
+		Integer count = wuzhiService.getUserCount();
+		pageNum = (int) Math.ceil(count / 104);
+		if (pageString != null) {
+			page = Integer.parseInt(pageString);
 		}
 		userList = wuzhiService.getAllUser(page);
 		int length = userList.size();
@@ -356,6 +362,11 @@ public class WuzhiController {
 		if (addNum > 0) {
 			wuzhiLogger.info("此次花费时间" + (endTime.getTime() - beginTime.getTime()));
 			wuzhiLogger.info("增加日志" + addNum);
+			AddNum addNumRecord = new AddNum();
+			addNumRecord.setAdd_num(addNum + "");
+			addNumRecord.setType("吾志");
+			addNumRecord.setAddtime(DateUtil.parse(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss"));
+			addNumService.insert(addNumRecord);
 		}
 		return "success";
 	}
