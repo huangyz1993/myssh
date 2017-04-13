@@ -64,15 +64,24 @@ public class WuzhiTrendController {
 	 */
 	public String showTrend() {
 		// List<Articles> allArticles = articlesService.getArticles();
+		Date beginTime=new Date();
 		List<Articles> allArticles = wuzhiArticleService.getArticles();
-		String str = "";
+		Date endTime=new Date();
+		System.out.println("花费时间:"+(endTime.getTime()-beginTime.getTime()));
+		StringBuilder str = new StringBuilder("");
+		endTime=new Date();
+		System.out.println("花费时间1:"+(endTime.getTime()-beginTime.getTime()));
 		for (Articles item : allArticles) {
-			str += item.getArticle();
+			str.append(item.getArticle());
 		}
+		endTime=new Date();
+		System.out.println("花费时间2:"+(endTime.getTime()-beginTime.getTime()));
 		// str = str.replaceAll("[^(\u2E80-\u9FFF)(a-z)(A-Z)]", ""); //
 		// 替换所有非中文和英文的;
-		str = str.replaceAll("[^(\u4e00-\u9fa5)]", ""); // 替换所有非中文和英文的;
+		str = new StringBuilder(str.toString().replaceAll("[^(\u4e00-\u9fa5)]", "")); // 替换所有非中文和英文的;
 		Map<String, Integer> maps = new HashMap<String, Integer>();
+		endTime=new Date();
+		System.out.println("花费时间3:"+(endTime.getTime()-beginTime.getTime()));
 		for (int i = 0; i < str.length(); i++) {
 			String key = String.valueOf((str.charAt(i)));
 			if (!maps.containsKey(key))
@@ -83,6 +92,8 @@ public class WuzhiTrendController {
 			}
 
 		}
+		endTime=new Date();
+		System.out.println("花费时间4:"+(endTime.getTime()-beginTime.getTime()));
 		number = new String[maps.size()][2];
 		int x = 0;
 		for (Map.Entry i : maps.entrySet()) {
@@ -90,6 +101,8 @@ public class WuzhiTrendController {
 			number[x][1] = i.getKey() + "";
 			x++;
 		}
+		endTime=new Date();
+		System.out.println("花费时间5:"+(endTime.getTime()-beginTime.getTime()));
 		int length = number.length;
 		for (int i = 0; i < length - 1; i++)
 			for (int j = i + 1; j < length; j++) {
@@ -106,6 +119,8 @@ public class WuzhiTrendController {
 				}
 			}
 		numberCopy = number;
+		endTime=new Date();
+		System.out.println("花费时间6:"+(endTime.getTime()-beginTime.getTime()));
 		return "showTrend";
 	}
 
