@@ -1,6 +1,8 @@
 package test;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TUser implements Serializable {
 	private String username;
@@ -30,5 +32,4 @@ public class TUser implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
 }

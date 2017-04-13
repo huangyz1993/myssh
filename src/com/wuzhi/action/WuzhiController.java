@@ -35,6 +35,8 @@ import com.wuzhi.view.UserArticle;
 
 @Controller("wuzhi")
 public class WuzhiController {
+	
+	public Integer userPage;//需要下载的user页码 1000一页。
 
 	public List<User> userList;
 
@@ -346,7 +348,18 @@ public class WuzhiController {
 	 */
 	public String addAllDownUser() throws ParseException {
 		Date beginTime = new Date();
-		List<User> userAll = wuzhiService.getUserAll();
+//		List<User> userAll = wuzhiService.getUserAll();
+		Integer beginUserIndex=(userPage-1)*1000;
+		Integer endUserIndex=userPage*1000;
+		List<User> userAll=wuzhiService.getUserAll();
+		if(beginUserIndex>userAll.size()){
+			return "success";
+		}
+		if(endUserIndex>userAll.size()){
+			endUserIndex=userAll.size();
+		}
+//		userAll = wuzhiService.getUserAll();
+		userAll = wuzhiService.getUserAll().subList(beginUserIndex, endUserIndex);
 		String url = "https://wuzhi.me";
 		int userLength = userAll.size();
 		Integer addNum = 0;
@@ -354,6 +367,7 @@ public class WuzhiController {
 			addNum += addArticle(new Url().getContent(url + "/u/" + userAll.get(x).getUserid()), userAll.get(x)
 					.getUserid());
 			System.out.println(x + " " + url + "/u/" + userAll.get(x).getUserid());
+			//wuzhiLogger.debug(x + " " + url + "/u/" + userAll.get(x).getUserid());
 		}
 		Date endTime = new Date();
 		System.out.println(endTime.getTime() - beginTime.getTime());
@@ -714,5 +728,16 @@ public class WuzhiController {
 	public void setWriteDays(String writeDays) {
 		this.writeDays = writeDays;
 	}
+
+	public Integer getUserPage() {
+		return userPage;
+	}
+
+	public void setUserPage(Integer userPage) {
+		this.userPage = userPage;
+	}
+
+	
+	
 
 }

@@ -90,7 +90,7 @@ public class WuzhiDaoImpl extends BaseDao implements WuzhiDao {
 	@Override
 	public List<User> getUserAll() {
 		// TODO Auto-generated method stub
-		return getSession().createQuery("from User").list();
+		return getSession().createQuery("from User Order by addtime desc").list();
 	}
 
 	@SuppressWarnings("unchecked")
